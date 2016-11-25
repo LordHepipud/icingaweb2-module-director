@@ -593,6 +593,11 @@ CREATE TABLE icinga_service (
     FOREIGN KEY command_endpoint (command_endpoint_id)
     REFERENCES icinga_endpoint (id)
     ON DELETE RESTRICT
+    ON UPDATE CASCADE,
+  CONSTRAINT icinga_service_service_set
+    FOREIGN KEY service_set (service_set_id)
+    REFERENCES icinga_service_set (id)
+    ON DELETE RESTRICT
     ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -669,7 +674,12 @@ CREATE TABLE icinga_service_set (
   description TEXT DEFAULT NULL,
   assign_filter TEXT DEFAULT NULL,
   PRIMARY KEY (id),
-  UNIQUE KEY object_key (object_name, host_id)
+  UNIQUE KEY object_key (object_name, host_id),
+  CONSTRAINT icinga_service_set_host
+    FOREIGN KEY host (host_id)
+    REFERENCES icinga_host (id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE icinga_service_set_inheritance (

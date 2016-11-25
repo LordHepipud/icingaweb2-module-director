@@ -735,6 +735,11 @@ CREATE TABLE icinga_service (
   FOREIGN KEY (command_endpoint_id)
     REFERENCES icinga_endpoint (id)
     ON DELETE RESTRICT
+    ON UPDATE CASCADE,
+  CONSTRAINT icinga_service_service_set
+    FOREIGN KEY (service_set_id)
+    REFERENCES icinga_service_set (id)
+    ON DELETE RESTRICT
     ON UPDATE CASCADE
 );
 
@@ -834,10 +839,16 @@ CREATE TABLE icinga_service_set (
   object_type enum_object_type_all NOT NULL,
   description text DEFAULT NULL,
   assign_filter text DEFAULT NULL,
-  PRIMARY KEY (id)
+  PRIMARY KEY (id),
+  CONSTRAINT icinga_service_set_host
+    FOREIGN KEY (host_id)
+    REFERENCES icinga_host (id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
 );
 
 CREATE UNIQUE INDEX service_set_name ON icinga_service_set (object_name, host_id);
+CREATE INDEX service_set_host ON icinga_service_set (host_id);
 
 
 CREATE TABLE icinga_service_set_inheritance (
